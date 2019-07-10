@@ -1,6 +1,6 @@
-use crate::vector::Vec3;
+extern crate pathtracer;
 
-mod vector;
+use pathtracer::Vec3;
 
 fn main() {
     let width = 200.0;

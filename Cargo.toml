@@ -6,10 +6,6 @@ edition = "2018"
 
 [dependencies]
 
-[lib]
-name = "pathtracing"
-path = "src/lib/pathtracing.rs"
-
 [[bin]]
 name = "gradient"
 path = "src/bin/gradient.rs"
