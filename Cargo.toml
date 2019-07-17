@@ -5,7 +5,8 @@ authors = ["Stefan Kerkmann <no@reply.de>"]
 edition = "2018"
 
 [dependencies]
+sdl2 = "0.32.2"
 
-[[bin]]
-name = "gradient"
-path = "src/bin/gradient.rs"
+#[[bin]]
+#name = "gradient"
+#path = "src/bin/gradient.rs"

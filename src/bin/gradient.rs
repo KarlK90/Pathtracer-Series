@@ -1,6 +1,4 @@
-extern crate pathtracer;
-
-use pathtracer::Vec3;
+use pathtracer::{Ray, Vec3};
 
 fn main() {
     let width = 200.0;

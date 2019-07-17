@@ -1,29 +1,27 @@
-use std::ops::Mul;
-
 use crate::Vec3;
-use crate::VectorType;
 
-pub struct Ray<T>
-where
-    T: VectorType,
-{
-    a: Vec3<T>,
-    b: Vec3<T>,
+#[derive(Debug, Default, Copy, Clone)]
+pub struct Ray {
+    a: Vec3,
+    b: Vec3,
 }
 
-impl<T> Ray<T>
-where
-    T: VectorType,
-{
-    pub fn origin(&self) -> Vec3<T> {
+impl Ray {
+    pub fn new(a: Vec3, b: Vec3) -> Ray {
+        Ray {
+            a,
+            b,
+        }
+    }
+    pub fn origin(&self) -> Vec3 {
         self.a
     }
 
-    pub fn direction(&self) -> Vec3<T> {
+    pub fn direction(&self) -> Vec3 {
         self.b
     }
 
-    //pub fn point_at_parameter(&self, t : f32) -> Vec3 {
-    //   self.A + t*self.B
-    //}
+    pub fn point_at_parameter(&self, t: f32) -> Vec3 {
+        self.a + t * self.b
+    }
 }

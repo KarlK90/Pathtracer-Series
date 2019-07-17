@@ -1,59 +1,40 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
-use std::process::Output;
-
-pub trait VectorType: Copy + Clone + Default {}
-
-impl VectorType for f32 {}
-
-impl VectorType for f64 {}
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 
 #[derive(Debug, Default, Copy, Clone)]
-pub struct Vec3<T>
-where
-    T: VectorType,
-{
-    pub x: T,
-    pub y: T,
-    pub z: T,
+pub struct Vec3 {
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
 }
 
-impl<T> Vec3<T>
-where
-    T: VectorType,
-{
-    pub fn new(x: T, y: T, z: T) -> Self {
-        Self { x, y, z }
+impl Vec3 {
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        Self { x: x, y: y, z: z }
     }
 }
 
-impl<T> Mul for Vec3<T>
-where
-    T: VectorType + Mul<Output = T>,
-{
-    type Output = Vec3<T::Output>;
+impl Mul for Vec3 {
+    type Output = Vec3;
     fn mul(self, other: Self) -> Self::Output {
         Vec3::new(self.x * other.x, self.y * other.y, self.z * other.z)
     }
 }
 
-impl Mul<f32> for Vec3<f32> {
-    type Output = Self;
+impl Mul<f32> for Vec3 {
+    type Output = Vec3;
     fn mul(self, other: f32) -> Self::Output {
         Vec3::new(self.x * other, self.y * other, self.z * other)
     }
 }
 
-impl Mul<f64> for Vec3<f64> {
-    type Output = Self;
-    fn mul(self, other: f64) -> Self::Output {
-        Vec3::new(self.x * other, self.y * other, self.z * other)
+impl Mul<Vec3> for f32 {
+    type Output = Vec3;
+    fn mul(self, other: Vec3) -> Self::Output {
+        Vec3::new(self * other.x, self * other.y, self * other.z)
     }
 }
 
-impl<T> MulAssign for Vec3<T>
-where
-    T: VectorType + Mul<Output = T>,
-{
+impl MulAssign for Vec3 {
     fn mul_assign(&mut self, other: Self) {
         self.x = self.x * other.x;
         self.y = self.y * other.y;
@@ -61,20 +42,22 @@ where
     }
 }
 
-impl<T> Add for Vec3<T>
-where
-    T: VectorType + Add<Output = T>,
-{
-    type Output = Vec3<T::Output>;
+impl MulAssign<f32> for Vec3 {
+    fn mul_assign(&mut self, other: f32) {
+        self.x *= other;
+        self.y *= other;
+        self.z *= other;
+    }
+}
+
+impl Add for Vec3 {
+    type Output = Vec3;
     fn add(self, other: Self) -> Self::Output {
         Vec3::new(self.x + other.x, self.y + other.y, self.z + other.z)
     }
 }
 
-impl<T> AddAssign for Vec3<T>
-where
-    T: VectorType + Add<Output = T>,
-{
+impl AddAssign for Vec3 {
     fn add_assign(&mut self, other: Self) {
         self.x = self.x + other.x;
         self.y = self.y + other.y;
@@ -82,20 +65,21 @@ where
     }
 }
 
-impl<T> Div for Vec3<T>
-where
-    T: VectorType + Div<Output = T>,
-{
-    type Output = Vec3<T::Output>;
+impl Div for Vec3 {
+    type Output = Vec3;
     fn div(self, other: Self) -> Self::Output {
         Vec3::new(self.x / other.x, self.y / other.y, self.z / other.z)
     }
 }
 
-impl<T> DivAssign for Vec3<T>
-where
-    T: VectorType + Div<Output = T>,
-{
+impl Div<f32> for Vec3 {
+    type Output = Vec3;
+    fn div(self, other: f32) -> Self::Output {
+        Vec3::new(self.x / other, self.y / other, self.z / other)
+    }
+}
+
+impl DivAssign for Vec3 {
     fn div_assign(&mut self, other: Self) {
         self.x = self.x / other.x;
         self.y = self.y / other.y;
@@ -103,30 +87,23 @@ where
     }
 }
 
-impl<T> Sub for Vec3<T>
-where
-    T: VectorType + Sub<Output = T>,
-{
-    type Output = Vec3<T::Output>;
+impl DivAssign<f32> for Vec3 {
+    fn div_assign(&mut self, other: f32) {
+        let k = 1.0_f32 / other;
+        self.x *= k;
+        self.y *= k;
+        self.z *= k;
+    }
+}
+
+impl Sub for Vec3 {
+    type Output = Vec3;
     fn sub(self, other: Self) -> Self::Output {
         Vec3::new(self.x - other.x, self.y - other.y, self.z - other.z)
     }
 }
 
-impl<T> Neg for Vec3<T>
-where
-    T: VectorType + Neg<Output = T>,
-{
-    type Output = Vec3<T::Output>;
-    fn neg(self) -> Self::Output {
-        Vec3::new(-self.x, -self.y, -self.z)
-    }
-}
-
-impl<T> SubAssign for Vec3<T>
-where
-    T: VectorType + Sub<Output = T>,
-{
+impl SubAssign for Vec3 {
     fn sub_assign(&mut self, other: Self) {
         self.x = self.x - other.x;
         self.y = self.y - other.y;
@@ -134,20 +111,16 @@ where
     }
 }
 
-impl<T> Vec3<T>
-where
-    T: VectorType
-        + Div<Output = T>
-        + Sub<Output = T>
-        + Mul<Output = T>
-        + Add<Output = T>
-        + Neg<Output = T>,
-{
-    pub fn dot(&self, other: Vec3<T>) -> T {
+impl Vec3 {
+    pub fn dot(&self, other: Vec3) -> f32 {
         self.x * other.x + self.y * other.y + self.z * other.z
     }
 
-    pub fn cross(&self, other: Vec3<T>) -> Vec3<T> {
+    pub fn unit_vector(other: Vec3) -> Vec3 {
+        other / other.length()
+    }
+
+    pub fn cross(&self, other: Vec3) -> Vec3 {
         Vec3::new(
             self.y * other.z - self.z * other.y,
             -(self.x * other.z - self.z * other.x),
@@ -155,31 +128,23 @@ where
         )
     }
 
-    pub fn squared_length(&self) -> T {
-        self.x * self.x + self.y * self.y + self.z * self.z
-    }
-
-    pub fn r(&self) -> T {
-        self.x
-    }
-
-    pub fn g(&self) -> T {
-        self.y
-    }
-
-    pub fn b(&self) -> T {
-        self.z
-    }
-}
-
-impl Vec3<f32> {
     pub fn length(&self) -> f32 {
         f32::sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
     }
-}
 
-impl Vec3<f64> {
-    pub fn length(&self) -> f64 {
-        f64::sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+    pub fn squared_length(&self) -> f32 {
+        self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
+    pub fn r(&self) -> f32 {
+        self.x
+    }
+
+    pub fn g(&self) -> f32 {
+        self.y
+    }
+
+    pub fn b(&self) -> f32 {
+        self.z
     }
 }
