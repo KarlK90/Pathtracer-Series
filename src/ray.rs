@@ -8,10 +8,7 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(a: Vec3, b: Vec3) -> Ray {
-        Ray {
-            a,
-            b,
-        }
+        Ray { a, b }
     }
     pub fn origin(&self) -> Vec3 {
         self.a

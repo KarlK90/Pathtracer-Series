@@ -7,12 +7,6 @@ pub struct Vec3 {
     pub z: f32,
 }
 
-impl Vec3 {
-    pub fn new(x: f32, y: f32, z: f32) -> Self {
-        Self { x: x, y: y, z: z }
-    }
-}
-
 impl Mul for Vec3 {
     type Output = Vec3;
     fn mul(self, other: Self) -> Self::Output {
@@ -146,5 +140,9 @@ impl Vec3 {
 
     pub fn b(&self) -> f32 {
         self.z
+    }
+
+    pub fn new(x: f32, y: f32, z: f32) -> Self {
+        Self { x, y, z }
     }
 }
